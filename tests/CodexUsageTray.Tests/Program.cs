@@ -10,7 +10,7 @@ Assert(snapshot.Buckets.Count == 1, "bucket count");
 Assert(snapshot.Buckets[0].Primary?.RemainingPercent == 71, "primary remaining");
 Assert(snapshot.Buckets[0].Secondary?.RemainingPercent == 37.5, "secondary remaining");
 Assert(DisplayFormatting.WindowName(TimeSpan.FromHours(5)) == "5 h", "five hour label");
-Assert(DisplayFormatting.WindowName(TimeSpan.FromDays(7)) == "7 días", "weekly label");
+Assert(DisplayFormatting.WindowName(TimeSpan.FromDays(7)) == "7 Tage", "weekly label");
 Console.WriteLine("All core tests passed.");
 
 static void Assert(bool condition, string description)

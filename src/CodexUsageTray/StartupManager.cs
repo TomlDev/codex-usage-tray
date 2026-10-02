@@ -9,7 +9,7 @@ internal static class StartupManager
     public static void SetEnabled(bool enabled)
     {
         using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", writable: true)
-            ?? throw new InvalidOperationException("No se pudo abrir la configuración de inicio de Windows.");
+            ?? throw new InvalidOperationException("Windows-Autostart-Einstellung konnte nicht geöffnet werden.");
         if (enabled) key.SetValue(KeyName, $"\"{Application.ExecutablePath}\""); else key.DeleteValue(KeyName, false);
     }
 }

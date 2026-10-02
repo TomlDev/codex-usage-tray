@@ -6,16 +6,16 @@ public static class DisplayFormatting
     {
         < 1 => $"{Math.Max(1, Math.Round(duration.TotalMinutes)):0} min",
         < 24 => $"{duration.TotalHours:0.#} h",
-        _ => $"{duration.TotalDays:0.#} días"
+        _ => $"{duration.TotalDays:0.#} Tage"
     };
 
     public static string ResetText(DateTimeOffset reset, DateTimeOffset now)
     {
-        if (reset == DateTimeOffset.MinValue) return "reinicio desconocido";
+        if (reset == DateTimeOffset.MinValue) return "Reset unbekannt";
         var remaining = reset - now;
-        if (remaining <= TimeSpan.Zero) return "reiniciando…";
-        if (remaining.TotalDays >= 1) return $"reinicia en {Math.Floor(remaining.TotalDays)} d {remaining.Hours} h";
-        if (remaining.TotalHours >= 1) return $"reinicia en {Math.Floor(remaining.TotalHours)} h {remaining.Minutes} min";
-        return $"reinicia en {Math.Max(1, remaining.Minutes)} min";
+        if (remaining <= TimeSpan.Zero) return "wird zurückgesetzt…";
+        if (remaining.TotalDays >= 1) return $"Reset in {Math.Floor(remaining.TotalDays)} d {remaining.Hours} h";
+        if (remaining.TotalHours >= 1) return $"Reset in {Math.Floor(remaining.TotalHours)} h {remaining.Minutes} min";
+        return $"Reset in {Math.Max(1, remaining.Minutes)} min";
     }
 }

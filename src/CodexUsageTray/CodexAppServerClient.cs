@@ -34,15 +34,16 @@ internal sealed class CodexAppServerClient : IAsyncDisposable
         if (process is { HasExited: false }) return;
         var start = new ProcessStartInfo
         {
-            FileName = "codex",
-            Arguments = "app-server --listen stdio://",
+            // via cmd.exe, damit auch der npm-Shim codex.cmd gefunden wird
+            FileName = "cmd.exe",
+            Arguments = "/c codex app-server --listen stdio://",
             UseShellExecute = false,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             CreateNoWindow = true
         };
-        process = Process.Start(start) ?? throw new InvalidOperationException("No se pudo iniciar Codex CLI.");
+        process = Process.Start(start) ?? throw new InvalidOperationException("Codex CLI konnte nicht gestartet werden.");
         input = process.StandardInput;
         output = process.StandardOutput;
         using var initialized = await RequestAsync("initialize", new
@@ -59,7 +60,7 @@ internal sealed class CodexAppServerClient : IAsyncDisposable
         await SendAsync(new { method, id, @params = parameters }, cancellationToken);
         while (true)
         {
-            var line = await output!.ReadLineAsync(cancellationToken) ?? throw new IOException("Codex app-server cerró la conexión.");
+            var line = await output!.ReadLineAsync(cancellationToken) ?? throw new IOException("Codex app-server hat die Verbindung geschlossen.");
             var document = JsonDocument.Parse(line);
             var root = document.RootElement;
             if (!root.TryGetProperty("id", out var responseId) || responseId.GetInt64() != id)
@@ -71,7 +72,7 @@ internal sealed class CodexAppServerClient : IAsyncDisposable
             {
                 var message = error.TryGetProperty("message", out var m) ? m.GetString() : error.ToString();
                 document.Dispose();
-                throw new InvalidOperationException(message ?? "Codex devolvió un error.");
+                throw new InvalidOperationException(message ?? "Codex hat einen Fehler gemeldet.");
             }
             var result = root.GetProperty("result").Clone();
             document.Dispose();

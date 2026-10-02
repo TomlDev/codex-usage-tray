@@ -12,10 +12,10 @@ public sealed record UsageSnapshot(
     DateTimeOffset FetchedAt,
     string? PlanType = null)
 {
-    public UsageWindow? MostImmediate => Buckets
+    public UsageWindow? LongestWindow => Buckets
         .SelectMany(x => new[] { x.Primary, x.Secondary })
         .Where(x => x is not null)
         .Cast<UsageWindow>()
-        .OrderBy(x => x.Duration)
+        .OrderByDescending(x => x.Duration)
         .FirstOrDefault();
 }
